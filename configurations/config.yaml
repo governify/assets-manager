@@ -1,0 +1,10 @@
+development:
+  private_key: {{PRIVATE_KEY}}{{^PRIVATE_KEY}}test{{/PRIVATE_KEY}}
+  login-credentials:
+    user: {{USER}}{{^USER}}governify-admin{{/USER}}
+    password: {{PASSWORD}}{{^PASSWORD}}governify-project{{/PASSWORD}}
+production:
+  private_key: {{PRIVATE_KEY}}{{^PRIVATE_KEY}}test{{/PRIVATE_KEY}}
+  login-credentials:
+    user: {{USER}}{{^USER}}governify-admin{{/USER}}
+    password: {{PASSWORD}}{{^PASSWORD}}governify-project{{/PASSWORD}}

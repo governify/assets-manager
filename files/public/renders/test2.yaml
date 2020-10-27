@@ -1,0 +1,2 @@
+
+test2: {{DB_HOST}}{{^DB_HOST}}mongo_registry{{/DB_HOST}}
