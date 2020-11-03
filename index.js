@@ -2,7 +2,7 @@ const express = require('express')
 const fs = require('fs');
 const mustache = require('mustache');
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 80;
 const config = require('./configurations')
 
 
