@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "description": "Assets Manager for Governify Project",
   "main": "index.js",
-  "author": "isa-group",
+  "author": {
+    "name": "ISA group",
+    "web": "http://www.isa.us.es/"
+  },
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
@@ -35,5 +38,8 @@
     "ignore": [
       "/tests/**"
     ]
+  },
+  "docker": {
+    "url": "https://hub.docker.com/r/governify/assets-manager"
   }
 }
