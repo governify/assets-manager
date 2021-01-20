@@ -1,13 +1,52 @@
-FROM governify/base-node-14:1.0
 
-COPY . .
-RUN npm install --only=prod
 
-ARG NODE_ENV=production
-ENV NODE_ENV $NODE_ENV
+ARG NODE_VERSION=12.18.3
+FROM node:${NODE_VERSION}-alpine
+RUN apk add --no-cache make pkgconfig gcc g++ python libx11-dev libxkbfile-dev
+ARG version=latest
+WORKDIR /home/theia
+ADD package.json ./package.json
+ARG GITHUB_TOKEN
+RUN yarn --pure-lockfile && \
+    NODE_OPTIONS="--max_old_space_size=4096" yarn theia build && \
+    yarn theia download:plugins && \
+    yarn --production && \
+    yarn autoclean --init && \
+    echo *.ts >> .yarnclean && \
+    echo *.ts.map >> .yarnclean && \
+    echo *.spec.* >> .yarnclean && \
+    yarn autoclean --force && \
+    yarn cache clean
 
-ARG PORT=80
-ENV PORT $PORT
-EXPOSE $PORT
+#Add assets manager dependencies
+RUN yarn add mustache
+RUN yarn add basic-auth
+RUN yarn add cors
+#Add assets manager files
+COPY assets-manager.js /home/theia/src-gen/backend/assets-manager.js
+COPY server.js /home/theia/src-gen/backend/server.js
+COPY configurations /home/theia/src-gen/backend/configurations
+COPY files /home/theia/src-gen/backend/files
+COPY extensions /home/theia/.theia/extensions
 
-CMD [ "node", "index.js" ]
+FROM node:${NODE_VERSION}-alpine
+# See : https://github.com/theia-ide/theia-apps/issues/34
+RUN addgroup theia && \
+    adduser -G theia -s /bin/sh -D theia;
+RUN chmod g+rw /home && \
+    mkdir -p /home/project && \
+    chown -R theia:theia /home/theia && \
+    chown -R theia:theia /home/project;
+RUN apk add --no-cache git openssh bash
+ENV HOME /home/theia
+WORKDIR /home/theia
+COPY --from=0 --chown=theia:theia /home/theia /home/theia
+# For allowing 80 port
+RUN apk add libcap
+RUN setcap 'cap_net_bind_service=+ep' /usr/local/bin/node
+EXPOSE 80
+ENV SHELL=/bin/bash \
+    THEIA_DEFAULT_PLUGINS=local-dir:/home/theia/plugins
+ENV USE_LOCAL_GIT true
+USER theia
+ENTRYPOINT [ "node", "/home/theia/src-gen/backend/main.js", "/home/theia/src-gen/backend/files", "--hostname=0.0.0.0" ]
