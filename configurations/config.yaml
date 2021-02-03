@@ -3,8 +3,10 @@ development:
   loginCredentials:
     user: {{LOGIN_USER}}{{^LOGIN_USER}}governify-admin{{/LOGIN_USER}}
     password: {{PASSWORD}}{{^PASSWORD}}governify-project{{/PASSWORD}}
+    port: 80
 production:
   private_key: {{PRIVATE_KEY}}{{^PRIVATE_KEY}}test{{/PRIVATE_KEY}}
   loginCredentials:
     user: {{LOGIN_USER}}{{^LOGIN_USER}}governify-admin{{/LOGIN_USER}}
     password: {{LOGIN_PASSWORD}}{{^LOGIN_PASSWORD}}governify-project{{/LOGIN_PASSWORD}}
+  port: 80
