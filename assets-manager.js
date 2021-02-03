@@ -21,8 +21,8 @@ var mime = {
 
 
 function check(name, pass) {
-    let nameOK = config.login_credentials.user;
-    let passOK = config.login_credentials.password;
+    let nameOK = config.loginCredentials.user;
+    let passOK = config.loginCredentials.password;
 
     let valid = true;
     valid = name === nameOK && valid;
