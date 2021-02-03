@@ -52,29 +52,58 @@ function serveMiddleware(req, res, next) {
             }
 
         }
-        //Check file exists
-        if (!fs.existsSync(path)) {
-            response = 'File not found.'
-            res.end(response);
-            return;
-        }
-       
-        //If image type, return the file without any parsing
-        if (fileExtension == 'jpg' || fileExtension == 'png' || fileExtension == 'gif') {
-            res.sendFile(path);
-            return;
-        }
+        //GET METHOD
+        if (req.method === 'GET') {
+            //Check file exists
+            if (!fs.existsSync(path)) {
+                response = 'File not found.'
+                res.end(response);
+                return;
+            }
 
-        fileContent = fs.readFileSync(path, 'utf8');
-        response = mustache.render(fileContent, process.env, {}, ['$_[', ']']);
-        //Set headers to format content properly
-        var contentType = mime[fileExtension] || 'text/plain'
-        res.set({
-            'Content-Type': contentType,
-        });
-        //Send response
-     
-        res.send(response)
+            //If image type, return the file without any parsing
+            if (fileExtension == 'jpg' || fileExtension == 'png' || fileExtension == 'gif') {
+                res.sendFile(path);
+                return;
+            }
+
+            fileContent = fs.readFileSync(path, 'utf8');
+            response = mustache.render(fileContent, process.env, {}, ['$_[', ']']);
+            //Set headers to format content properly
+            var contentType = mime[fileExtension] || 'text/plain'
+            res.set({
+                'Content-Type': contentType,
+            });
+            //Send response
+
+            res.send(response)
+        } else
+        { 
+            if (req.method === 'POST') {
+                if (fs.existsSync(path)) {
+                    response = 'File already exists.'
+                    res.end(response);
+                    return;
+                }
+                fs.writeFile(path, JSON.stringify(req.body), 'UTF8', function(response) {
+                    res.end(response)
+                    return;
+                }
+                )
+            } else if (req.method === 'PUT') {
+                    if (!fs.existsSync(path)) {
+                        response = 'File doesnt exist, use POST to create a new file'
+                        res.end(response);
+                        return;
+                    }
+                    fs.writeFile(path, JSON.stringify(req.body), 'UTF8', function(response) {
+                        res.end(response)
+                        return;
+                    }
+                    )
+                }
+            
+        }
     }
     else {
         let credentials = basicAuth(req);
