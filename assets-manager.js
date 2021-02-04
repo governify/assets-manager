@@ -16,7 +16,8 @@ var mime = {
     jpg: 'image/jpeg',
     png: 'image/png',
     svg: 'image/svg+xml',
-    js: 'application/javascript'
+    js: 'application/javascript',
+    json: 'application/json'
 };
 
 
