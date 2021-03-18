@@ -58,7 +58,7 @@ function serveMiddleware(req, res, next) {
             //Check file exists
             if (!fs.existsSync(path)) {
                 response = 'File not found.'
-                res.end(response);
+                res.status(404).end(response);
                 return;
             }
 
