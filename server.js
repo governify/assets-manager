@@ -13,9 +13,18 @@ const { BackendApplication, CliManager } = require('@theia/core/lib/node');
 const { backendApplicationModule } = require('@theia/core/lib/node/backend-application-module');
 const { messagingBackendModule } = require('@theia/core/lib/node/messaging/messaging-backend-module');
 const { loggerBackendModule } = require('@theia/core/lib/node/logger-backend-module');
-const assetsManager = require('./assets-manager')
-const cors = require('cors')
-const config = require('./configurations')
+const assetsManager = require('./assets-manager');
+const config = require('./configurations');
+const bodyParser = require('body-parser');
+
+//Setting the default infrastructure location
+if (!process.env['GOV_INFRASTRUCTURE']){
+    process.env['GOV_INFRASTRUCTURE'] = '/home/project/public/infrastructure.yaml'
+}
+const governify = require('governify-commons');
+governify.init().catch(err=>{
+    console.error('Error in governify commons: ', err)
+});
 
 
 const container = new Container();

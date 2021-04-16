@@ -58,7 +58,7 @@ function _addConfiguration(uri, encoding) {
         configStringTemplate = fs.readFileSync(path.join(__dirname, uri), encoding);
     }
     configString = mustache.render(configStringTemplate, process.env);
-    var newConfigurations = jsyaml.safeLoad(configString)[process.env.NODE_ENV ? process.env.NODE_ENV : 'development'];
+    var newConfigurations = jsyaml.load(configString)[process.env.NODE_ENV ? process.env.NODE_ENV : 'development'];
 
     for (var c in newConfigurations) {
         this[c] = newConfigurations[c];
