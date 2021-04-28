@@ -21,8 +21,9 @@ COPY extensions /home/theia/.theia/extensions
 #Override for incrementing body size limit on requests
 COPY fileOverrides/file-download-endpoint.ts /home/theia/node_modules/@theia/filesystem/lib/node/download/file-download-endpoint.js
 RUN chown -R theia:theia /home/project;
+RUN chown -R theia:theia /home/theia/.theia
 
-USER root
+USER theia
 EXPOSE 80
 ENTRYPOINT [ "node", "/home/theia/src-gen/backend/main.js", "/home/project", "--hostname=0.0.0.0" ]
 
