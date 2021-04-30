@@ -109,6 +109,19 @@ function serveMiddleware(req, res, next) {
                     }
                     )
                 }
+             else if (req.method === 'PATCH') {
+                if (!fs.existsSync(path)) {
+                    response = 'File doesnt exist, use POST to create a new file'
+                    res.end(response);
+                    return;
+                }
+                if (req.body.operation.toLowerCase() === 'append'){
+                    fs.appendFile(path, req.body.content, 'UTF8', function(response) {
+                        res.end(response)
+                        return;
+                    });
+                }
+             }
             
         }
     }
