@@ -8,7 +8,6 @@ logs/
 # Coverage directory used by tools like istanbul
 coverage
 *.lcov
-files/
 
 # nyc test coverage
 .nyc_output
