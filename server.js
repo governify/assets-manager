@@ -15,6 +15,7 @@ const { messagingBackendModule } = require('@theia/core/lib/node/messaging/messa
 const { loggerBackendModule } = require('@theia/core/lib/node/logger-backend-module');
 const assetsManager = require('./assets-manager');
 const config = require('./configurations');
+const gitDownloader = require('./git-downloader')
 const bodyParser = require('body-parser');
 
 //Setting the default infrastructure location
@@ -43,8 +44,16 @@ function start(port, host, argv) {
     return cliManager.initializeCli(argv).then(async function () {
         const application = container.get(BackendApplication);
         //  application.use(cors());
-        const governify = require('governify-commons');
+        if (process.env['ASSETS_REPOSITORY']) { // Download assets from repository if specified in ENV VAR
+            console.log('Assets repository URL specified. Downloading assets from: ', process.env['ASSETS_REPOSITORY'])
+            if (process.env['ASSETS_REPOSITORY_BRANCH']) {
+                console.log('And checking out branch:', process.env['ASSETS_REPOSITORY_BRANCH'])
+            }
+            await gitDownloader.gitDownload(process.env['ASSETS_REPOSITORY'], '/home/project', process.env['ASSETS_REPOSITORY_BRANCH'], process.env['ASSETS_REPOSITORY_SSHKEY']);
+            console.log('Git download process finished');
+        }
 
+        const governify = require('governify-commons');
         await governify.init().then(govMiddleware => {
             application.use('/commons', govMiddleware);
             application.use(assetsManager.serveMiddleware);
