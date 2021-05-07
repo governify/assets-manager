@@ -15,16 +15,14 @@ const { messagingBackendModule } = require('@theia/core/lib/node/messaging/messa
 const { loggerBackendModule } = require('@theia/core/lib/node/logger-backend-module');
 const assetsManager = require('./assets-manager');
 const config = require('./configurations');
+const gitDownloader = require('./git-downloader')
 const bodyParser = require('body-parser');
 
 //Setting the default infrastructure location
-if (!process.env['GOV_INFRASTRUCTURE']){
+if (!process.env['GOV_INFRASTRUCTURE']) {
     process.env['GOV_INFRASTRUCTURE'] = '/home/project/public/infrastructure.yaml'
 }
-const governify = require('governify-commons');
-governify.init().catch(err=>{
-    console.error('Error in governify commons: ', err)
-});
+
 
 
 const container = new Container();
@@ -42,20 +40,37 @@ function start(port, host, argv) {
     if (argv === undefined) {
         argv = process.argv;
     }
-
     const cliManager = container.get(CliManager);
-    return cliManager.initializeCli(argv).then(function () {
+    return cliManager.initializeCli(argv).then(async function () {
         const application = container.get(BackendApplication);
-      //  application.use(cors());
-        application.use(assetsManager.serveMiddleware);
+        //  application.use(cors());
+        if (process.env['ASSETS_REPOSITORY']) { // Download assets from repository if specified in ENV VAR
+            console.log('Assets repository URL specified. Downloading assets from: ', process.env['ASSETS_REPOSITORY'])
+            if (process.env['ASSETS_REPOSITORY_BRANCH']) {
+                console.log('And checking out branch:', process.env['ASSETS_REPOSITORY_BRANCH'])
+            }
+            await gitDownloader.gitDownload(process.env['ASSETS_REPOSITORY'], '/home/project', process.env['ASSETS_REPOSITORY_BRANCH'], process.env['ASSETS_REPOSITORY_SSHKEY']);
+            console.log('Git download process finished');
+        }
+
+        const governify = require('governify-commons');
+        await governify.init().then(govMiddleware => {
+            application.use('/commons', govMiddleware);
+            application.use(assetsManager.serveMiddleware);
+
+        }).catch(err => {
+            console.error('Error in governify commons: ', err)
+        });
         application.use(express.static(path.join(__dirname, '../../lib')));
         application.use(express.static(path.join(__dirname, '../../lib/index.html')));
-       
+
         return application.start(config.port, host);
     });
 }
 
 module.exports = (port, host, argv) => Promise.resolve()
+    //Add governify module load
+
     .then(function () { return Promise.resolve(require('@theia/filesystem/lib/node/filesystem-backend-module')).then(load) })
     .then(function () { return Promise.resolve(require('@theia/filesystem/lib/node/download/file-download-backend-module')).then(load) })
     .then(function () { return Promise.resolve(require('@theia/workspace/lib/node/workspace-backend-module')).then(load) })
