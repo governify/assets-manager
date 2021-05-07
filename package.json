@@ -1,8 +1,14 @@
 {
   "name": "assets-manager",
-  "version": "1.0.0",
-  "description": "[![Node.js CI](https://github.com/governify/assets-manager/workflows/Node.js%20CI/badge.svg?branch=master)](https://github.com/governify/assets-manager/actions)\r [![Coverage Status](https://coveralls.io/repos/github/governify/assets-manager/badge.svg)](https://coveralls.io/github/governify/assets-manager)\r <a href=\"https://standardjs.com\"><img src=\"https://img.shields.io/badge/code_style-semistandard-brightgreen.svg\" alt=\"Standard - JavaScript Style Guide\"></a>\r [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](https://conventionalcommits.org)",
   "main": "assets-manager.js",
+  "version": "1.1.1",
+  "description": "Assets Manager for Governify Project",
+  "main": "index.js",
+  "author": {
+    "name": "ISA group",
+    "web": "http://www.isa.us.es/"
+  },
+  "license": "ISC",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
@@ -11,7 +17,6 @@
     "type": "git",
     "url": "git+https://github.com/governify/assets-manager.git"
   },
-  "author": "",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/governify/assets-manager/issues"
