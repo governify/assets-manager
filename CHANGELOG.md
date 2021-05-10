@@ -1,3 +1,26 @@
+# [1.2.0](https://github.com/governify/assets-manager/compare/v1.1.1...v1.2.0) (2021-05-10)
+
+
+### Bug Fixes
+
+* e2e pipeline ([17accba](https://github.com/governify/assets-manager/commit/17accbaabd651f91f110dd0d6f382f167af0818f))
+* gitignore ([ebb0d1d](https://github.com/governify/assets-manager/commit/ebb0d1d0b5d61c66d1f16681f42e831df9fc73c7))
+* gitignore ([59543fb](https://github.com/governify/assets-manager/commit/59543fb5e239d462efddb3156b9dccc1f07d13df))
+* Remove default files ([d41017c](https://github.com/governify/assets-manager/commit/d41017c04d6637ecb4053b176ad78577c35ca4ee))
+
+
+### Features
+
+* adding append operation endpoitn ([e11d003](https://github.com/governify/assets-manager/commit/e11d0037f7091ccd5781f5009da58777b5203af0))
+* Changing default folder ([4f65132](https://github.com/governify/assets-manager/commit/4f65132903d6d9a8748299d60c879b4b6f5bc64b))
+* Cleaning assets manager ([60daeeb](https://github.com/governify/assets-manager/commit/60daeeb6dbb184eee76054bee65a2ce52ad54051))
+* Implementing new commons ([4e34dfb](https://github.com/governify/assets-manager/commit/4e34dfb17d1cba1f1cd16448a11b7e4470a710bc))
+* update commons ([4e1c594](https://github.com/governify/assets-manager/commit/4e1c59499c5d6bad09317d309f8ddc8cacb3f4b1))
+* updated governify-commons ([5d97ffa](https://github.com/governify/assets-manager/commit/5d97ffa27824f7371faa7318a5b42ebb3b18ec2d))
+* Updating for commons ([1858046](https://github.com/governify/assets-manager/commit/18580463a380fe460b0d29270feee2d1fa5bd358))
+
+
+
 ## [1.1.1](https://github.com/governify/assets-manager/compare/v1.1.0...v1.1.1) (2021-04-16)
 
 
