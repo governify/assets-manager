@@ -3,10 +3,13 @@ const mustache = require('mustache');
 mustache.escape = function (text) { return text; };
 const config = require('./configurations')
 const basicAuth = require('basic-auth');
-const cors = require('cors');
+const governify = require('governify-commons');
+
 
 
 module.exports.serveMiddleware = serveMiddleware;
+
+
 
 var mime = {
     html: 'text/html',
@@ -40,7 +43,7 @@ function serveMiddleware(req, res, next) {
         var response;
         var fileContent;
         console.log(req.query)
-        var path = __dirname + '/files' + req.path.replace('/api/v1', '');
+        var path = '/home/project' + req.path.replace('/api/v1', '');
         var fileExtension = path.substring(path.substring(0,).lastIndexOf('.') + 1, path.length)
         if (!req.path.toLowerCase().startsWith('/api/v1/public')) {
             if (!req.query.private_key) {
@@ -69,7 +72,10 @@ function serveMiddleware(req, res, next) {
             }
 
             fileContent = fs.readFileSync(path, 'utf8');
-            response = mustache.render(fileContent, process.env, {}, ['$_[', ']']);
+            response = mustache.render(fileContent, governify.infrastructure.getServicesReplacedDefaults().internal, {}, ['$_[infrastructure.internal.', ']'])
+            response = mustache.render(response, governify.infrastructure.getServicesReplacedDefaults().external, {}, ['$_[infrastructure.external.', ']'])
+
+            response = mustache.render(response, process.env, {}, ['$_[', ']']);
             //Set headers to format content properly
             var contentType = mime[fileExtension] || 'text/plain'
             res.set({
@@ -103,6 +109,19 @@ function serveMiddleware(req, res, next) {
                     }
                     )
                 }
+             else if (req.method === 'PATCH') {
+                if (!fs.existsSync(path)) {
+                    response = 'File doesnt exist, use POST to create a new file'
+                    res.end(response);
+                    return;
+                }
+                if (req.body.operation.toLowerCase() === 'append'){
+                    fs.appendFile(path, req.body.content, 'UTF8', function(response) {
+                        res.end(response)
+                        return;
+                    });
+                }
+             }
             
         }
     }
