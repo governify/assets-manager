@@ -43,7 +43,7 @@ function start(port, host, argv) {
     const cliManager = container.get(CliManager);
     return cliManager.initializeCli(argv).then(async function () {
         const application = container.get(BackendApplication);
-        //  application.use(cors());
+        application.use(cors());
         if (process.env['ASSETS_REPOSITORY']) { // Download assets from repository if specified in ENV VAR
             console.log('Assets repository URL specified. Downloading assets from: ', process.env['ASSETS_REPOSITORY'])
             if (process.env['ASSETS_REPOSITORY_BRANCH']) {
