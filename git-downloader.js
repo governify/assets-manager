@@ -1,5 +1,6 @@
 
 var spawn = require('child_process').spawn;
+const logger = require('governify-commons').getLogger().tag('git-downloader');
 
 function gitDownload(url, path, branch) {
     return new Promise((resolve, reject) => {
@@ -14,7 +15,7 @@ function gitDownload(url, path, branch) {
 
         var process = spawn('git', args);
         process.stderr.on('data', function (data) {
-            console.log('GIT-CLONE-CONSOLE: ' + data);
+            logger.info('GIT-CLONE-CONSOLE: ' + data);
         });
         process.on('close', function (status) {
             if (status == 0) {

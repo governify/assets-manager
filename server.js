@@ -18,6 +18,8 @@ const assetsManager = require('./assets-manager');
 const config = require('./configurations');
 const gitDownloader = require('./git-downloader')
 const bodyParser = require('body-parser');
+const governify = require('governify-commons');
+const logger = governify.getLogger().tag('server');
 
 //Setting the default infrastructure location
 if (!process.env['GOV_INFRASTRUCTURE']) {
@@ -46,21 +48,20 @@ function start(port, host, argv) {
         const application = container.get(BackendApplication);
         application.use(cors());
         if (process.env['ASSETS_REPOSITORY']) { // Download assets from repository if specified in ENV VAR
-            console.log('Assets repository URL specified. Downloading assets from: ', process.env['ASSETS_REPOSITORY'])
+            logger.info('Assets repository URL specified. Downloading assets from: ', process.env['ASSETS_REPOSITORY'])
             if (process.env['ASSETS_REPOSITORY_BRANCH']) {
-                console.log('And checking out branch:', process.env['ASSETS_REPOSITORY_BRANCH'])
+                logger.info('And checking out branch:', process.env['ASSETS_REPOSITORY_BRANCH'])
             }
             await gitDownloader.gitDownload(process.env['ASSETS_REPOSITORY'], '/home/project', process.env['ASSETS_REPOSITORY_BRANCH'], process.env['ASSETS_REPOSITORY_SSHKEY']);
-            console.log('Git download process finished');
+            logger.info('Git download process finished');
         }
 
-        const governify = require('governify-commons');
         await governify.init().then(govMiddleware => {
-            application.use('/commons', govMiddleware);
+            application.use(govMiddleware);
             application.use(assetsManager.serveMiddleware);
 
         }).catch(err => {
-            console.error('Error in governify commons: ', err)
+            logger.error('Error in governify commons: ', err)
         });
         application.use(express.static(path.join(__dirname, '../../lib')));
         application.use(express.static(path.join(__dirname, '../../lib/index.html')));

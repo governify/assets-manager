@@ -4,6 +4,7 @@ mustache.escape = function (text) { return text; };
 const config = require('./configurations')
 const basicAuth = require('basic-auth');
 const governify = require('governify-commons');
+const logger = governify.getLogger().tag('assets-manager');
 
 
 
@@ -42,7 +43,7 @@ function serveMiddleware(req, res, next) {
     if (req.path.startsWith("/api/v1")) {
         var response;
         var fileContent;
-        console.log(req.query)
+        logger.info(req.query)
         var path = '/home/project' + req.path.replace('/api/v1', '');
         var fileExtension = path.substring(path.substring(0,).lastIndexOf('.') + 1, path.length)
         if (!req.path.toLowerCase().startsWith('/api/v1/public')) {
