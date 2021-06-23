@@ -44,7 +44,7 @@ function serveMiddleware(req, res, next) {
         var response;
         var fileContent;
         logger.info(req.query)
-        var path = '/home/project' + req.path.replace('/api/v1', '');
+        var path = (process.env.NODE_ENV === 'production' ? '/home/project' : './files') + req.path.replace('/api/v1', '');
         var fileExtension = path.substring(path.substring(0,).lastIndexOf('.') + 1, path.length)
         if (!req.path.toLowerCase().startsWith('/api/v1/public')) {
             if (!req.query.private_key) {
@@ -85,48 +85,46 @@ function serveMiddleware(req, res, next) {
             //Send response
 
             res.send(response)
-        } else
-        { 
+        } else {
             if (req.method === 'POST') {
                 if (fs.existsSync(path)) {
                     response = 'File already exists.'
                     res.end(response);
                     return;
                 }
-                fs.writeFile(path, JSON.stringify(req.body), 'UTF8', function(response) {
+                fs.writeFile(path, JSON.stringify(req.body), 'UTF8', function (response) {
                     res.end(response)
                     return;
                 }
                 )
             } else if (req.method === 'PUT') {
-                    if (!fs.existsSync(path)) {
-                        response = 'File doesnt exist, use POST to create a new file'
-                        res.end(response);
-                        return;
-                    }
-                    fs.writeFile(path, JSON.stringify(req.body), 'UTF8', function(response) {
-                        res.end(response)
-                        return;
-                    }
-                    )
-                }
-             else if (req.method === 'PATCH') {
                 if (!fs.existsSync(path)) {
                     response = 'File doesnt exist, use POST to create a new file'
                     res.end(response);
                     return;
                 }
-                if (req.body.operation.toLowerCase() === 'append'){
-                    fs.appendFile(path, req.body.content, 'UTF8', function(response) {
+                fs.writeFile(path, JSON.stringify(req.body), 'UTF8', function (response) {
+                    res.end(response)
+                    return;
+                }
+                )
+            }
+            else if (req.method === 'PATCH') {
+                if (!fs.existsSync(path)) {
+                    response = 'File doesnt exist, use POST to create a new file'
+                    res.end(response);
+                    return;
+                }
+                if (req.body.operation.toLowerCase() === 'append') {
+                    fs.appendFile(path, req.body.content, 'UTF8', function (response) {
                         res.end(response)
                         return;
                     });
                 }
-             }
-            
+            }
+
         }
-    }
-    else {
+    } else {
         let credentials = basicAuth(req);
         if (!credentials || !check(credentials.name, credentials.pass)) {
 
@@ -137,7 +135,12 @@ function serveMiddleware(req, res, next) {
             return;
         }
         else {
-            next();
+            if (process.env.NODE_ENV !== "production") {
+                logger.warn("Theia was not deployed because NODE_ENV is not production.");
+                res.status(409).send("Theia was not deployed because NODE_ENV is not production.");
+            } else {
+                next();
+            }
         }
     }
 

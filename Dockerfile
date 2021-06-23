@@ -27,6 +27,10 @@ RUN chown -R theia:theia /home/theia/.theia
 RUN chown -R theia:theia /home/theia/.config
 USER theia
 EXPOSE 80
+
+ARG NODE_ENV=production
+ENV NODE_ENV $NODE_ENV
+
 ENTRYPOINT [ "node", "/home/theia/src-gen/backend/main.js", "/home/project", "--hostname=0.0.0.0" ]
 
 
