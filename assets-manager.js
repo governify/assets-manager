@@ -48,11 +48,11 @@ function serveMiddleware(req, res, next) {
         var fileExtension = path.substring(path.substring(0,).lastIndexOf('.') + 1, path.length)
         if (!req.path.toLowerCase().startsWith('/api/v1/public')) {
             if (!req.query.private_key) {
-                res.send(500, 'You must specify private key to access private files.')
+                res.status(500).send('You must specify private key to access private files.')
                 return;
             }
             if (req.query.private_key != config.private_key) {
-                res.send(500, 'Invalid private key.')
+                res.status(500).send('Invalid private key.')
                 return;
             }
 
