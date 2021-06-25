@@ -6,9 +6,9 @@ const http = require('http');
 const app = express();
 
 const SERVER_PORT = 5200;
-
 const main = async () => {
     await governify.init().then(govMiddleware => {
+        app.use(express.json());
         app.use(govMiddleware);
         app.use(assetsManager.serveMiddleware);
         http.createServer(app).listen(SERVER_PORT, function () {
@@ -32,3 +32,13 @@ process.on('SIGTERM', function onSigterm() {
 });
 
 main();
+
+const undeploy = () => {
+    process.exit();
+  };
+  
+module.exports = {
+    deploy: main,
+    undeploy: undeploy
+};
+  

@@ -1,0 +1,68 @@
+[
+    {
+        "name": "Json Post",
+        "type":"POST",
+        "docName":"test.json",
+        "body": {
+            "testData":"test"
+        }
+    },
+    {
+        "name": "Txt Post",
+        "type":"POST",
+        "docName":"test.txt",
+        "body": {
+            "testData":"test"
+        }
+    },
+    {
+        "name": "Json Get",
+        "type":"GET",
+        "docName":"test2.json"
+    },
+    {
+        "name": "Json Get Private",
+        "type":"GET",
+        "privacy":"Private",
+        "docName":"test2.json"
+    },
+    {
+        "name": "Txt Get",
+        "type":"GET",
+        "docName":"test2.txt"
+    },
+    {
+        "name": "Json Put",
+        "type":"PUT",
+        "docName":"test2.json",
+        "body": {
+            "testData":"testModified"
+        } 
+    },
+    {
+        "name": "Txt Put",
+        "type":"PUT",
+        "docName":"test2.txt",
+        "body": {
+            "testData":"testModified"
+        }
+    },
+    {
+        "name": "Json Patch",
+        "type":"PATCH",
+        "docName":"test2.json",
+        "body": {
+            "operation":"append",
+            "content":"testAppended"
+        }
+    },
+    {
+        "name": "Txt Patch",
+        "type":"PATCH",
+        "docName":"test2.txt",
+        "body": {
+            "operation":"append",
+            "content":"testAppended"
+        }
+    }
+]

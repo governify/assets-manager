@@ -9,8 +9,11 @@
   },
   "license": "ISC",
   "scripts": {
-    "test": "node ./tests/test",
-    "start": "node server.js"
+    "test": "mocha ./tests/test.js --timeout 20000 -s 20",
+    "coverage": "nyc mocha ./tests/test.js --timeout 20000 -s 5",
+    "start": "node server.js",
+    "lint": "semistandard",
+    "lint-fix": "semistandard --fix"
   },
   "repository": {
     "type": "git",
@@ -27,5 +30,10 @@
     "governify-commons": "^1.13.0",
     "js-yaml": "^4.0.0",
     "mustache": "^4.2.0"
+  },
+  "devDependencies": {
+    "mocha": "^9.0.1",
+    "nyc": "^15.1.0",
+    "semistandard": "^14.2.0"
   }
 }

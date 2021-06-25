@@ -1,0 +1,92 @@
+[
+    {
+        "name": "Json Post",
+        "type":"POST",
+        "docName":"test.json",
+        "body": {
+            "testData":"test"
+        },
+        "response": {
+            
+        }
+    },
+    {
+        "name": "Txt Post",
+        "type":"POST",
+        "docName":"test.txt",
+        "body": {
+            "testData":"test"
+        },
+        "response": {
+            
+        }
+    },
+    {
+        "name": "Json Get",
+        "type":"GET",
+        "docName":"test.json",
+        "body": {
+            "testData":"test"
+        },
+        "response": {
+            
+        }
+    },
+    {
+        "name": "Txt Get",
+        "type":"GET",
+        "docName":"test.txt",
+        "body": {
+            "testData":"test"
+        },
+        "response": {
+            
+        }
+    },
+    {
+        "name": "Json Put",
+        "type":"PUT",
+        "docName":"test.json",
+        "body": {
+            "testData":"testModified"
+        },
+        "response": {
+            
+        }
+    },
+    {
+        "name": "Txt Put",
+        "type":"PUT",
+        "docName":"test.txt",
+        "body": {
+            "testData":"testModified"
+        },
+        "response": {
+            
+        }
+    },
+    {
+        "name": "Json Patch",
+        "type":"PATCH",
+        "docName":"test.json",
+        "body": {
+            "operation":"append",
+            "content":"testAppended"
+        },
+        "response": {
+            
+        }
+    },
+    {
+        "name": "Txt Patch",
+        "type":"PATCH",
+        "docName":"test.txt",
+        "body": {
+            "operation":"append",
+            "content":"testAppended"
+        },
+        "response": {
+            
+        }
+    }
+]
