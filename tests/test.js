@@ -7,10 +7,12 @@ const http = require('../index');
 const Logger = require('governify-commons/logger');
 const { Console } = require('console');
 const serverUrl = "http://localhost:5200";
-
+const filesPathPrefix = process.env.NODE_ENV === 'production' ? '/home/project' : './files'
 // For skipping tests in case of failure
 const skip = [];
 const keep = [];
+
+Logger.setLogConfig({level:3})
 
 describe('Tests', function () {
     describe('#apiPublicPostRequest()', function () {
@@ -56,7 +58,7 @@ function apiPublicPostRequest() {
         if (((keep.length === 0 && !skip.includes(testRequest.name)) || (keep.length !== 0 && keep.includes(testRequest.name))) && testRequest.type === "POST") {
     
             it('should doc '+ testRequest.docName+' not be previously created (' + testRequest.name + ')', function (done) { 
-                var docCreated = fs.existsSync('./files/public/'+testRequest.docName)
+                var docCreated = fs.existsSync(filesPathPrefix+'/public/'+testRequest.docName)
                 //Check file not exist
                 assert.strictEqual(docCreated,false);
                 done();
@@ -88,7 +90,7 @@ function apiPublicPostRequest() {
             });
 
             it('should doce exist after POST (' + testRequest.name + ')', function (done) { 
-                var docCreated = fs.existsSync('./files/public/'+testRequest.docName)
+                var docCreated = fs.existsSync(filesPathPrefix+'/public/'+testRequest.docName)
                 //Check file created successfully
                 assert.strictEqual(docCreated,true);
                 done();
@@ -101,7 +103,7 @@ function apiPublicGetRequest() {
     const testRequests = JSON.parse(fs.readFileSync(path.join(__dirname, '/testRequests.json')));
     for (const testRequest of testRequests) {
         if (((keep.length === 0 && !skip.includes(testRequest.name)) || (keep.length !== 0 && keep.includes(testRequest.name))) && testRequest.type === "GET") {
-            let responseData = '';
+            let responseData;
 
             it('should respond with 200 OK on GET (' + testRequest.name + ')', function (done) {
                 try {
@@ -141,7 +143,7 @@ function apiPublicPutRequest() {
         if (((keep.length === 0 && !skip.includes(testRequest.name)) || (keep.length !== 0 && keep.includes(testRequest.name))) && testRequest.type === "PUT") {
 
             it('should doc '+ testRequest.docName+' be previously created (' + testRequest.name + ')', function (done) { 
-                var docCreated = fs.existsSync('./files/public/'+testRequest.docName)
+                var docCreated = fs.existsSync(filesPathPrefix+'/public/'+testRequest.docName)
                 //Check file already exist
                 assert.strictEqual(docCreated,true);
                 done();
@@ -201,9 +203,9 @@ function apiPublicPatchRequest() {
     const testRequests = JSON.parse(fs.readFileSync(path.join(__dirname, '/testRequests.json')));
     for (const testRequest of testRequests) {
         if (((keep.length === 0 && !skip.includes(testRequest.name)) || (keep.length !== 0 && keep.includes(testRequest.name))) && testRequest.type === "PATCH") {
-            let actualData = '';
+            let actualData;
             it('should doc '+ testRequest.docName+' be previously created (' + testRequest.name + ')', function (done) { 
-                var docCreated = fs.existsSync('./files/public/'+testRequest.docName)
+                var docCreated = fs.existsSync(filesPathPrefix+'/public/'+testRequest.docName)
                 //Check file already exist and geting actual data
                 assert.strictEqual(docCreated,true);
                 try {
@@ -283,7 +285,7 @@ function apiPublicPostErrorRequest() {
         if (((keep.length === 0 && !skip.includes(testRequest.name)) || (keep.length !== 0 && keep.includes(testRequest.name))) && testRequest.type === "POST") {
     
             it('should doc '+ testRequest.docName+' be previously created (' + testRequest.name + ')', function (done) { 
-                var docCreated = fs.existsSync('./files/public/'+testRequest.docName)
+                var docCreated = fs.existsSync(filesPathPrefix+'/public/'+testRequest.docName)
                 //Check file already exist
                 assert.strictEqual(docCreated,true);
                 done();
@@ -357,7 +359,7 @@ function apiPublicPutErrorRequest() {
         if (((keep.length === 0 && !skip.includes(testRequest.name)) || (keep.length !== 0 && keep.includes(testRequest.name))) && testRequest.type === "PUT") {
 
             it('should doc '+ testRequest.docName+' not be previously created (' + testRequest.name + ')', function (done) { 
-                var docCreated = fs.existsSync('./files/public/'+testRequest.docName)
+                var docCreated = fs.existsSync(filesPathPrefix+'/public/'+testRequest.docName)
                 //Check file already exist
                 assert.strictEqual(docCreated,false);
                 done();
@@ -396,7 +398,7 @@ function apiPublicPatchErrorRequest() {
         if (((keep.length === 0 && !skip.includes(testRequest.name)) || (keep.length !== 0 && keep.includes(testRequest.name))) && testRequest.type === "PATCH") {
 
             it('should doc '+ testRequest.docName+' not be previously created (' + testRequest.name + ')', function (done) { 
-                var docCreated = fs.existsSync('./files/public/'+testRequest.docName)
+                var docCreated = fs.existsSync(filesPathPrefix+'/public/'+testRequest.docName)
                 //Check file already exist
                 assert.strictEqual(docCreated,false);
                 done();
