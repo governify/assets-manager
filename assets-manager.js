@@ -89,7 +89,7 @@ function serveMiddleware(req, res, next) {
             if (req.method === 'POST') {
                 if (fs.existsSync(path)) {
                     response = 'File already exists.'
-                    res.end(response);
+                    res.status(409).send(response);
                     return;
                 }
                 fs.writeFile(path, JSON.stringify(req.body), 'UTF8', function (response) {
@@ -100,7 +100,7 @@ function serveMiddleware(req, res, next) {
             } else if (req.method === 'PUT') {
                 if (!fs.existsSync(path)) {
                     response = 'File doesnt exist, use POST to create a new file'
-                    res.end(response);
+                    res.status(404).send(response);
                     return;
                 }
                 fs.writeFile(path, JSON.stringify(req.body), 'UTF8', function (response) {
@@ -112,7 +112,7 @@ function serveMiddleware(req, res, next) {
             else if (req.method === 'PATCH') {
                 if (!fs.existsSync(path)) {
                     response = 'File doesnt exist, use POST to create a new file'
-                    res.end(response);
+                    res.status(404).send(response);
                     return;
                 }
                 if (req.body.operation.toLowerCase() === 'append') {
