@@ -5,7 +5,6 @@ const fs = require('fs');
 const path = require('path');
 const mustache = require('mustache');
 
-
 /**
  * Configuration module.
  * @module config
@@ -18,8 +17,8 @@ const mustache = require('mustache');
  * Export functions and Objects
  */
 const config = {
-    addConfiguration: _addConfiguration,
-    setProperty: _setProperty,
+  addConfiguration: _addConfiguration,
+  setProperty: _setProperty
 };
 
 module.exports = config;
@@ -30,41 +29,41 @@ module.exports = config;
 config.addConfiguration('config.yaml', 'utf8');
 
 config.state = {
-    agreementsInProgress: []
+  agreementsInProgress: []
 };
 
-/** Write info messages on logger.*/
+/** Write info messages on logger. */
 module.exports.stream = {
-    /** Print an info message on logger.
+  /** Print an info message on logger.
      * @param {String} message message to print
      * @param {String} encoding message enconding
      * @alias module:config.stream.write
      * */
-    write: function (message) {
-        module.exports.logger.info(message);
-    }
+  write: function (message) {
+    module.exports.logger.info(message);
+  }
 };
 
 /*
  * Implement the functions
  */
-function _addConfiguration(uri, encoding) {
-    var configStringTemplate = null;
-    var configString = null;
+function _addConfiguration (uri, encoding) {
+  var configStringTemplate = null;
+  var configString = null;
 
-    if (!uri) {
-        throw new Error("Parameter URI is required");
-    } else {
-        configStringTemplate = fs.readFileSync(path.join(__dirname, uri), encoding);
-    }
-    configString = mustache.render(configStringTemplate, process.env);
-    var newConfigurations = jsyaml.load(configString)[process.env.NODE_ENV ? process.env.NODE_ENV : 'development'];
+  if (!uri) {
+    throw new Error('Parameter URI is required');
+  } else {
+    configStringTemplate = fs.readFileSync(path.join(__dirname, uri), encoding);
+  }
+  configString = mustache.render(configStringTemplate, process.env);
+  var newConfigurations = jsyaml.load(configString)[process.env.NODE_ENV ? process.env.NODE_ENV : 'development'];
 
-    for (var c in newConfigurations) {
-        this[c] = newConfigurations[c];
-    }
+  for (var c in newConfigurations) {
+    this[c] = newConfigurations[c];
+  }
 }
 
-function _setProperty(propertyName, newValue) {
-    this[propertyName] = newValue;
+function _setProperty (propertyName, newValue) {
+  this[propertyName] = newValue;
 }
