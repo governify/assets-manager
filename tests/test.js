@@ -3,16 +3,16 @@ const fs = require('fs');
 const path = require('path');
 const governify = require('governify-commons')
 
-const http = require('../index');
+const server = require('../index');
 const Logger = require('governify-commons/logger');
 const { Console } = require('console');
+const sinon = require('sinon');
 const serverUrl = "http://localhost:5200";
 const filesPathPrefix = process.env.NODE_ENV === 'production' ? '/home/project' : './files'
 // For skipping tests in case of failure
-const skip = [];
-const keep = [];
 
-Logger.setLogConfig({level:3})
+process.env.NODE_ENV = "test"
+sinon.stub(console);
 
 describe('Tests', function () {
     describe('#apiPublicPostRequest()', function () {
@@ -26,6 +26,9 @@ describe('Tests', function () {
       });
     describe('#apiPublicPatchRequest()', function () {
         apiPublicPatchRequest();
+      });
+    describe('#apiPublicAuthorizationRequest()', function () {
+        apiPublicAuthorizationRequest();
       });
     describe('#apiPublicPostErrorRequest()', function () {
         apiPublicPostErrorRequest();
@@ -42,20 +45,18 @@ describe('Tests', function () {
     describe('#privateTestError()', function () {
         privateTestError();
       });
-
+    describe('#apiPublicAuthorizationErrorRequest()', function () {
+        apiPublicAuthorizationErrorRequest();
+      });
     after((done) => {
-        const fileNames = JSON.parse(fs.readFileSync(path.join(__dirname, '/filesNames.json')));
-        for (const fileName of fileNames) {
-                fs.unlinkSync('./files/public/'+fileName)
-        };
-        http.undeploy(done);
+        server.undeploy(done);
     });
  });
 
 function apiPublicPostRequest() {
     const testRequests = JSON.parse(fs.readFileSync(path.join(__dirname, '/testRequests.json')));
     for (const testRequest of testRequests) {
-        if (((keep.length === 0 && !skip.includes(testRequest.name)) || (keep.length !== 0 && keep.includes(testRequest.name))) && testRequest.type === "POST") {
+        if (testRequest.type === "POST") {
     
             it('should doc '+ testRequest.docName+' not be previously created (' + testRequest.name + ')', function (done) { 
                 var docCreated = fs.existsSync(filesPathPrefix+'/public/'+testRequest.docName)
@@ -72,7 +73,7 @@ function apiPublicPostRequest() {
                     data: testRequest.body,
                     headers: {
                         'User-Agent': 'request',
-                        'Content-Type':'application/json'
+                        'Content-Type': testRequest.contentType
                     }
                     };
                     governify.httpClient.request(options).then(response => {
@@ -93,8 +94,11 @@ function apiPublicPostRequest() {
                 var docCreated = fs.existsSync(filesPathPrefix+'/public/'+testRequest.docName)
                 //Check file created successfully
                 assert.strictEqual(docCreated,true);
+                fs.unlinkSync('./files/public/' + testRequest.docName)
                 done();
             });
+
+           
         }
     }
 }
@@ -102,17 +106,19 @@ function apiPublicPostRequest() {
 function apiPublicGetRequest() {
     const testRequests = JSON.parse(fs.readFileSync(path.join(__dirname, '/testRequests.json')));
     for (const testRequest of testRequests) {
-        if (((keep.length === 0 && !skip.includes(testRequest.name)) || (keep.length !== 0 && keep.includes(testRequest.name))) && testRequest.type === "GET") {
+        if (testRequest.type === "GET") {
             let responseData;
 
             it('should respond with 200 OK on GET (' + testRequest.name + ')', function (done) {
+
+                fs.writeFileSync(filesPathPrefix + '/public/'+ testRequest.docName, JSON.stringify(testRequest.body), 'UTF8')
+
                 try {
                     const options = {
                     method: 'GET',
                     url: serverUrl + '/api/v1/public/'+ testRequest.docName,
                     headers: {
-                        'User-Agent': 'request',
-                        'Content-Type':'application/json'
+                        'User-Agent': 'request'
                     }
                     };
                     governify.httpClient.request(options).then(response => {
@@ -130,7 +136,8 @@ function apiPublicGetRequest() {
 
             it('should respond body be correct data GET (' + testRequest.name + ')', function (done) {
                 //Check correct response
-                assert.strictEqual(responseData, JSON.stringify(testRequest.body));
+                assert.strictEqual(responseData, testRequest.response ? JSON.stringify(testRequest.response) :  JSON.stringify(testRequest.body));
+                fs.unlinkSync('./files/public/' + testRequest.docName)
                 done();
             });
         }
@@ -140,9 +147,12 @@ function apiPublicGetRequest() {
 function apiPublicPutRequest() {
     const testRequests = JSON.parse(fs.readFileSync(path.join(__dirname, '/testRequests.json')));
     for (const testRequest of testRequests) {
-        if (((keep.length === 0 && !skip.includes(testRequest.name)) || (keep.length !== 0 && keep.includes(testRequest.name))) && testRequest.type === "PUT") {
+        if (testRequest.type === "PUT") {
 
             it('should doc '+ testRequest.docName+' be previously created (' + testRequest.name + ')', function (done) { 
+
+                fs.writeFileSync(filesPathPrefix + '/public/'+ testRequest.docName, JSON.stringify(testRequest.body), 'UTF8')
+
                 var docCreated = fs.existsSync(filesPathPrefix+'/public/'+testRequest.docName)
                 //Check file already exist
                 assert.strictEqual(docCreated,true);
@@ -154,10 +164,10 @@ function apiPublicPutRequest() {
                     const options = {
                     method: 'PUT',
                     url: serverUrl + '/api/v1/public/'+ testRequest.docName,
-                    data: testRequest.body,
+                    data: testRequest.bodyUpdate,
                     headers: {
                         'User-Agent': 'request',
-                        'Content-Type':'application/json'
+                        'Content-Type':testRequest.contentType
                     }
                     };
                     governify.httpClient.request(options).then(response => {
@@ -178,15 +188,15 @@ function apiPublicPutRequest() {
                     method: 'GET',
                     url: serverUrl + '/api/v1/public/'+ testRequest.docName,
                     headers: {
-                        'User-Agent': 'request',
-                        'Content-Type':'application/json'
+                        'User-Agent': 'request'
                     }
                     };
                     governify.httpClient.request(options).then(response => {
                         //Check operation successful
                         assert.strictEqual(response.status, 200);
                         //Check correct response
-                        assert.strictEqual(JSON.stringify(response.data) , JSON.stringify(testRequest.body));
+                        assert.strictEqual(JSON.stringify(response.data) , JSON.stringify(testRequest.bodyUpdate));
+                        fs.unlinkSync('./files/public/' + testRequest.docName)
                         done();
                     }).catch(err => {
                     assert.fail('Error on request');
@@ -202,9 +212,10 @@ function apiPublicPutRequest() {
 function apiPublicPatchRequest() {
     const testRequests = JSON.parse(fs.readFileSync(path.join(__dirname, '/testRequests.json')));
     for (const testRequest of testRequests) {
-        if (((keep.length === 0 && !skip.includes(testRequest.name)) || (keep.length !== 0 && keep.includes(testRequest.name))) && testRequest.type === "PATCH") {
+        if (testRequest.type === "PATCH") {
             let actualData;
             it('should doc '+ testRequest.docName+' be previously created (' + testRequest.name + ')', function (done) { 
+                fs.writeFileSync(filesPathPrefix + '/public/'+ testRequest.docName, JSON.stringify(testRequest.body), 'UTF8')
                 var docCreated = fs.existsSync(filesPathPrefix+'/public/'+testRequest.docName)
                 //Check file already exist and geting actual data
                 assert.strictEqual(docCreated,true);
@@ -234,10 +245,10 @@ function apiPublicPatchRequest() {
                     const options = {
                     method: 'PATCH',
                     url: serverUrl + '/api/v1/public/'+ testRequest.docName,
-                    data: testRequest.body,
+                    data: testRequest.body2,
                     headers: {
                         'User-Agent': 'request',
-                        'Content-Type':'application/json'
+                        'Content-Type': testRequest.contentType
                     }
                     };
                     governify.httpClient.request(options).then(response => {
@@ -266,7 +277,8 @@ function apiPublicPatchRequest() {
                         //Check operation successful
                         assert.strictEqual(response.status, 200);
                         //Check correct response with data apendded
-                        assert.strictEqual(replaceAll(JSON.stringify(response.data),"\\","") , '"'+actualData+testRequest.body.content+'"');
+                        assert.strictEqual(JSON.stringify(response.data) , JSON.stringify(actualData+testRequest.body2.content));
+                        fs.unlinkSync('./files/public/' + testRequest.docName)
                         done();
                     }).catch(err => {
                     assert.fail('Error on request');
@@ -279,12 +291,45 @@ function apiPublicPatchRequest() {
     }
 }
 
+function apiPublicAuthorizationRequest() {
+    const testRequests = JSON.parse(fs.readFileSync(path.join(__dirname, '/testRequests.json')));
+    for (const testRequest of testRequests) {
+        if (testRequest.type === "Authorization") {
+            let responseData;
+
+            it('should respond with Authorization OK  (' + testRequest.name + ')', function (done) {
+                try {
+                    const options = {
+                    method: 'GET',
+                    url: serverUrl + '/',
+                    headers: {
+                        'User-Agent': 'request',
+                        'Authorization': testRequest.authorization
+                    }
+                    };
+                    governify.httpClient.request(options).then(response => {
+
+                    }).catch(err => {
+                        //Check operation Code
+                        assert.strictEqual(err.response.status, 409);
+                        assert.strictEqual(err.response.data, testRequest.response);
+                        done();
+                    });
+                } catch (err) {
+                    assert.fail('Error when sending request');
+                }
+            });
+        }
+    }
+}
+
 function apiPublicPostErrorRequest() {
     const testRequests = JSON.parse(fs.readFileSync(path.join(__dirname, '/negativeTestRequests.json')));
     for (const testRequest of testRequests) {
-        if (((keep.length === 0 && !skip.includes(testRequest.name)) || (keep.length !== 0 && keep.includes(testRequest.name))) && testRequest.type === "POST") {
+        if (testRequest.type === "POST") {
     
             it('should doc '+ testRequest.docName+' be previously created (' + testRequest.name + ')', function (done) { 
+                fs.writeFileSync(filesPathPrefix + '/public/'+ testRequest.docName, JSON.stringify(testRequest.body), 'UTF8')
                 var docCreated = fs.existsSync(filesPathPrefix+'/public/'+testRequest.docName)
                 //Check file already exist
                 assert.strictEqual(docCreated,true);
@@ -299,17 +344,18 @@ function apiPublicPostErrorRequest() {
                     data: testRequest.body,
                     headers: {
                         'User-Agent': 'request',
-                        'Content-Type':'application/json'
+                        'Content-Type': testRequest.contentType
                     }
                     };
                     governify.httpClient.request(options).then(response => {
-                        //Check operation successful
-                        assert.strictEqual(response.status, 200);
-                        //Check correct response
-                        assert.strictEqual(response.data, 'File already exists.');
-                        done();
+
                     }).catch(err => {
-                    assert.fail('Error on request');
+                        //Check operation status
+                        assert.strictEqual(err.response.status, 409);
+                        //Check correct response
+                        assert.strictEqual(err.response.data, testRequest.response);
+                        fs.unlinkSync('./files/public/' + testRequest.docName)
+                        done();
                     });
                 } catch (err) {
                     assert.fail('Error when sending request');
@@ -323,8 +369,7 @@ function apiPublicPostErrorRequest() {
 function apiPublicGetErrorRequest() {
     const testRequests = JSON.parse(fs.readFileSync(path.join(__dirname, '/negativeTestRequests.json')));
     for (const testRequest of testRequests) {
-        if (((keep.length === 0 && !skip.includes(testRequest.name)) || (keep.length !== 0 && keep.includes(testRequest.name))) 
-            && testRequest.type === "GET" && testRequest.privacy !== "Private") {
+        if (testRequest.type === "GET" && testRequest.privacy !== "Private") {
 
             it('should respond with File not found. 404 error on GET Private(' + testRequest.name + ')', function (done) {
                 try {
@@ -332,8 +377,7 @@ function apiPublicGetErrorRequest() {
                     method: 'GET',
                     url: serverUrl + '/api/v1/public/'+ testRequest.docName,
                     headers: {
-                        'User-Agent': 'request',
-                        'Content-Type':'application/json'
+                        'User-Agent': 'request'
                     }
                     };
                     governify.httpClient.request(options).then(response => {
@@ -342,7 +386,7 @@ function apiPublicGetErrorRequest() {
                         //Check operation error
                         assert.strictEqual(err.response.status, 404);
                         //Check error message
-                        assert.strictEqual(err.response.data, 'File not found.');
+                        assert.strictEqual(err.response.data, testRequest.response);
                         done();
                     });
                 } catch (err) {
@@ -356,7 +400,7 @@ function apiPublicGetErrorRequest() {
 function apiPublicPutErrorRequest() {
     const testRequests = JSON.parse(fs.readFileSync(path.join(__dirname, '/negativeTestRequests.json')));
     for (const testRequest of testRequests) {
-        if (((keep.length === 0 && !skip.includes(testRequest.name)) || (keep.length !== 0 && keep.includes(testRequest.name))) && testRequest.type === "PUT") {
+        if (testRequest.type === "PUT") {
 
             it('should doc '+ testRequest.docName+' not be previously created (' + testRequest.name + ')', function (done) { 
                 var docCreated = fs.existsSync(filesPathPrefix+'/public/'+testRequest.docName)
@@ -373,16 +417,16 @@ function apiPublicPutErrorRequest() {
                     data: testRequest.body,
                     headers: {
                         'User-Agent': 'request',
-                        'Content-Type':'application/json'
+                        'Content-Type': testRequest.contentType
                     }
                     };
                     governify.httpClient.request(options).then(response => {
-                        //Check operation successful
-                        assert.strictEqual(response.status, 200);
-                        assert.strictEqual(response.data, 'File doesnt exist, use POST to create a new file');
-                        done();
+
                     }).catch(err => {
-                    assert.fail('Error on request');
+                     //Check operation status
+                     assert.strictEqual(err.response.status, 404);
+                     assert.strictEqual(err.response.data, testRequest.response);
+                     done();
                     });
                 } catch (err) {
                     assert.fail('Error when sending request');
@@ -395,7 +439,7 @@ function apiPublicPutErrorRequest() {
 function apiPublicPatchErrorRequest() {
     const testRequests = JSON.parse(fs.readFileSync(path.join(__dirname, '/negativeTestRequests.json')));
     for (const testRequest of testRequests) {
-        if (((keep.length === 0 && !skip.includes(testRequest.name)) || (keep.length !== 0 && keep.includes(testRequest.name))) && testRequest.type === "PATCH") {
+        if (testRequest.type === "PATCH") {
 
             it('should doc '+ testRequest.docName+' not be previously created (' + testRequest.name + ')', function (done) { 
                 var docCreated = fs.existsSync(filesPathPrefix+'/public/'+testRequest.docName)
@@ -412,16 +456,16 @@ function apiPublicPatchErrorRequest() {
                     data: testRequest.body,
                     headers: {
                         'User-Agent': 'request',
-                        'Content-Type':'application/json'
+                        'Content-Type': testRequest.contentType
                     }
                     };
                     governify.httpClient.request(options).then(response => {
-                        //Check operation successful
-                        assert.strictEqual(response.status, 200);
-                        assert.strictEqual(response.data, 'File doesnt exist, use POST to create a new file');
-                        done();
+  
                     }).catch(err => {
-                    assert.fail('Error on request');
+                        //Check operation status
+                        assert.strictEqual(err.response.status, 404);
+                        assert.strictEqual(err.response.data, testRequest.response);
+                        done();
                     });
                 } catch (err) {
                     assert.fail('Error when sending request');
@@ -434,7 +478,7 @@ function apiPublicPatchErrorRequest() {
 function privateTestError(){
     const testRequests = JSON.parse(fs.readFileSync(path.join(__dirname, '/negativeTestRequests.json')));
     for (const testRequest of testRequests) {
-        if (((keep.length === 0 && !skip.includes(testRequest.name)) || (keep.length !== 0 && keep.includes(testRequest.name))) && testRequest.type === "GET" && testRequest.privacy === "Private") {
+        if (testRequest.type === "GET" && testRequest.privacy === "Private") {
             it('should respond not specify private key ERROR(' + testRequest.name + ')', function (done) {
                 try {
                     const options = {
@@ -486,7 +530,34 @@ function privateTestError(){
     }
 }
 
-//Support function to replace all caracter \ from strings
-function replaceAll(string, search, replace) {
-    return string.split(search).join(replace);
-  }
+function apiPublicAuthorizationErrorRequest() {
+    const testRequests = JSON.parse(fs.readFileSync(path.join(__dirname, '/negativeTestRequests.json')));
+    for (const testRequest of testRequests) {
+        if (testRequest.type === "Authorization ERROR") {
+            let responseData;
+
+            it('should respond with Authorization ERROR  (' + testRequest.name + ')', function (done) {
+                try {
+                    const options = {
+                    method: 'GET',
+                    url: serverUrl + '/',
+                    headers: {
+                        'User-Agent': 'request',
+                    }
+                    };
+                    governify.httpClient.request(options).then(response => {
+
+                    }).catch(err => {
+                        //Check operation Code
+                        console.log(err.response.data)
+                        assert.strictEqual(err.response.status, 401);
+                        assert.strictEqual(err.response.data, testRequest.response);
+                        done();
+                    });
+                } catch (err) {
+                    assert.fail('Error when sending request');
+                }
+            });
+        }
+    }
+}

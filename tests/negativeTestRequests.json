@@ -5,47 +5,53 @@
         "docName":"test.json",
         "body": {
             "testData":"test"
-        }
+        },
+        "contentType":"application/json",
+        "response":"File already exists."
     },
     {
         "name": "Txt Post",
         "type":"POST",
         "docName":"test.txt",
-        "body": {
-            "testData":"test"
-        }
+        "body":"test",
+        "contentType":"text/plain",
+        "response":"File already exists."
     },
     {
         "name": "Json Get",
         "type":"GET",
-        "docName":"test2.json"
+        "docName":"test.json",
+        "response":"File not found."
     },
     {
         "name": "Json Get Private",
         "type":"GET",
         "privacy":"Private",
-        "docName":"test2.json"
+        "docName":"test.json"
     },
     {
         "name": "Txt Get",
         "type":"GET",
-        "docName":"test2.txt"
+        "docName":"test2.txt",
+        "response":"File not found."
     },
     {
         "name": "Json Put",
         "type":"PUT",
         "docName":"test2.json",
+        "contentType":"application/json",
         "body": {
             "testData":"testModified"
-        } 
+        },
+        "response":"File doesnt exist, use POST to create a new file" 
     },
     {
         "name": "Txt Put",
         "type":"PUT",
         "docName":"test2.txt",
-        "body": {
-            "testData":"testModified"
-        }
+        "contentType":"text/plain",
+        "body": "testModified",
+        "response":"File doesnt exist, use POST to create a new file"
     },
     {
         "name": "Json Patch",
@@ -54,7 +60,8 @@
         "body": {
             "operation":"append",
             "content":"testAppended"
-        }
+        },
+        "response":"File doesnt exist, use POST to create a new file"
     },
     {
         "name": "Txt Patch",
@@ -63,6 +70,12 @@
         "body": {
             "operation":"append",
             "content":"testAppended"
-        }
+        },
+        "response":"File doesnt exist, use POST to create a new file"
+    },
+    {
+        "name": "Authorization",
+        "type":"Authorization ERROR",
+        "response": "Unauthorized"
     }
 ]

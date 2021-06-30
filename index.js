@@ -9,6 +9,7 @@ const SERVER_PORT = 5200;
 const main = async () => {
     await governify.init().then(govMiddleware => {
         app.use(express.json());
+        app.use(express.text());
         app.use(govMiddleware);
         app.use(assetsManager.serveMiddleware);
         http.createServer(app).listen(SERVER_PORT, function () {
