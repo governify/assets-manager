@@ -1,3 +1,27 @@
+# [1.3.0](https://github.com/governify/assets-manager/compare/v1.2.2...v1.3.0) (2021-05-19)
+
+
+### Bug Fixes
+
+* cors ([5d674c1](https://github.com/governify/assets-manager/commit/5d674c1e81bc4bf446c2bb37c0ee78680a386e5e))
+
+
+### Features
+
+* E2E assets to develop ([999a0bd](https://github.com/governify/assets-manager/commit/999a0bd6c4df6bad8510192fd5e9ebd04790084c))
+
+
+
+## [1.2.2](https://github.com/governify/assets-manager/compare/v1.2.1...v1.2.2) (2021-05-19)
+
+
+### Bug Fixes
+
+* removed cors ([4b9127f](https://github.com/governify/assets-manager/commit/4b9127fbf9aa9f306f813c8e01e24b44917e6e37))
+* use cors ([b487648](https://github.com/governify/assets-manager/commit/b487648dc0fda6df1378825f6039ce81b6b753c6))
+
+
+
 ## [1.2.1](https://github.com/governify/assets-manager/compare/v1.2.0...v1.2.1) (2021-05-17)
 
 
