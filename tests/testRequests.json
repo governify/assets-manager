@@ -1,0 +1,101 @@
+[
+    {
+        "name": "Json Post",
+        "type":"POST",
+        "docName":"test.json",
+        "body": {
+            "testData":"test"
+        },
+        "contentType":"application/json",
+        "response": ""
+    },
+    {
+        "name": "Txt Post",
+        "type":"POST",
+        "contentType":"text/plain",
+        "docName":"test.txt",
+        "body":"test",
+        "response": ""
+    },
+    {
+        "name": "Json Get",
+        "type":"GET",
+        "docName":"test.json",
+        "body": {
+            "testData":"test"
+        }
+    },
+    {
+        "name": "Txt Get",
+        "type":"GET",
+        "docName":"test.txt",
+        "body": "test"
+    },
+    {
+        "name": "Txt infrastructure Get",
+        "type":"GET",
+        "docName":"test.txt",
+        "body": "$_[infrastructure.internal.render.default]",
+        "response": "http://localhost:5100"
+    },
+    {
+        "name": "Txt env variable Get",
+        "type":"GET",
+        "docName":"test.txt",
+        "body": "$_[NODE_ENV]",
+        "response": "test"
+    },
+    {
+        "name": "Authorization",
+        "type":"Authorization",
+        "authorization": "Basic Z292ZXJuaWZ5LWFkbWluOmdvdmVybmlmeS1wcm9qZWN0",
+        "response": "Theia was not deployed because NODE_ENV is not production."
+    },
+    {
+        "name": "Json Put",
+        "type":"PUT",
+        "docName":"test.json",
+        "contentType":"application/json",
+        "body": {
+            "testData":"test"
+        },
+        "bodyUpdate": {
+            "testData":"testModified"
+        },
+        "response": ""
+    },
+    {
+        "name": "Txt Put",
+        "type":"PUT",
+        "docName":"test.txt",
+        "contentType":"text/plain",
+        "body":"test",
+        "bodyUpdate":"testModified",
+        "response": ""
+    },
+    {
+        "name": "Json Patch",
+        "type":"PATCH",
+        "docName":"test.json",
+        "contentType":"application/json",
+        "body":{
+            "data":"datanormal"
+        },
+        "body2": {
+            "operation":"append",
+            "content":"{\r\n            \"data\":\"dataappended\"\r\n        }"
+        }
+    },
+    {
+        "name": "Txt Patch",
+        "type":"PATCH",
+        "docName":"test.txt",
+        "contentType":"application/json",
+        "body":"datanormal",
+        "body2": {
+            "operation":"append",
+            "content":"testAppended"
+        }
+    }
+    
+]
