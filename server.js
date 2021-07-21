@@ -48,12 +48,8 @@ function start (port, host, argv) {
     if (process.env.ASSETS_REPOSITORY) { // Download assets from repository if specified in ENV VAR
       //Fix for cleaning .keep file and let git download repository
       if (fs.readdirSync('/home/project/public').length <= 1){
-      logger.info('Deleting assets folders', fs.readdirSync('/home/project/public'))
-        
         fs.rmdirSync('/home/project/public', { recursive: true });
         fs.rmdirSync('/home/project/private', { recursive: true });
-      logger.info('Deleting assets folders', fs.readdirSync('/home/project'))
-
       }
       logger.info('Assets repository URL specified. Downloading assets from: ', process.env.ASSETS_REPOSITORY);
       if (process.env.ASSETS_REPOSITORY_BRANCH) {
