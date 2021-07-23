@@ -46,8 +46,8 @@ function start (port, host, argv) {
     const application = container.get(BackendApplication);
     application.use(cors());
     if (process.env.ASSETS_REPOSITORY) { // Download assets from repository if specified in ENV VAR
-      //Fix for cleaning .keep file and let git download repository
-      if (fs.readdirSync('/home/project/public').length <= 1){
+      // Fix for cleaning .keep file and let git download repository
+      if (fs.readdirSync('/home/project/public').length <= 1) {
         fs.rmdirSync('/home/project/public', { recursive: true });
         fs.rmdirSync('/home/project/private', { recursive: true });
       }
