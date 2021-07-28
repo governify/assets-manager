@@ -178,6 +178,15 @@ function serveMiddleware (req, res, next) {
               res.end(response);
             });
           }
+        } else if (req.method === 'DELETE') {
+          if (!fs.existsSync(filePath)) {
+            response = 'File doesnt exist';
+            res.end(response);
+            return;
+          }
+          fs.unlinkSync(filePath);
+          response = 'File deleted'
+          res.status(200).send(response)
         }
       }
     }
