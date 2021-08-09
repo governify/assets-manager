@@ -2,6 +2,7 @@ const assetsManager = require('./assets-manager');
 const governify = require('governify-commons');
 const logger = governify.getLogger().tag('index');
 const express = require('express');
+const fileUpload = require('express-fileupload');
 const http = require('http');
 const app = express();
 
@@ -10,6 +11,7 @@ const main = async () => {
   await governify.init().then(govMiddleware => {
     app.use(express.json());
     app.use(express.text());
+    app.use(fileUpload());
     app.use(govMiddleware);
     app.use(assetsManager.serveMiddleware);
     http.createServer(app).listen(SERVER_PORT, function () {

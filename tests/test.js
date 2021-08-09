@@ -21,6 +21,9 @@ describe('Tests', function () {
     describe('#apiPublicGetRequest()', function () {
         apiPublicGetRequest();
       });
+      describe('#apiPublicGetInfoRequest()', function () {
+        apiPublicGetInfoRequest();
+      });
     describe('#apiPublicPutRequest()', function () {
         apiPublicPutRequest();
       });
@@ -138,6 +141,42 @@ function apiPublicGetRequest() {
                 //Check correct response
                 assert.strictEqual(responseData, testRequest.response ? JSON.stringify(testRequest.response) :  JSON.stringify(testRequest.body));
                 fs.unlinkSync('./files/public/' + testRequest.docName)
+                done();
+            });
+        }
+    }
+}
+
+function apiPublicGetInfoRequest() {
+    const testRequests = JSON.parse(fs.readFileSync(path.join(__dirname, '/testRequests.json')));
+    for (const testRequest of testRequests) {
+        if (testRequest.type === "GETINFO") {
+            let responseData;
+            it('should respond with 200 OK on GET (' + testRequest.name + ')', function (done) {
+                try {
+                    const options = {
+                    method: 'GET',
+                    url: serverUrl + '/api/v1/info/public/'+ testRequest.docName,
+                    headers: {
+                        'User-Agent': 'request'
+                    }
+                    };
+                    governify.httpClient.request(options).then(response => {
+                        //Check operation successful
+                        assert.strictEqual(response.status, 200);
+                        responseData = response.data
+                        done();
+                    }).catch(err => {
+                    assert.fail('Error on request');
+                    });
+                } catch (err) {
+                    assert.fail('Error when sending request');
+                }
+            });
+
+            it('should respond body be correct data GET (' + testRequest.name + ')', function (done) {
+                //Check correct response
+                assert.strictEqual(responseData.files.length,testRequest.length);
                 done();
             });
         }

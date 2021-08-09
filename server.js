@@ -20,6 +20,7 @@ const config = require('./configurations');
 const gitDownloader = require('./git-downloader');
 const governify = require('governify-commons');
 const logger = governify.getLogger().tag('server');
+const fileUpload = require('express-fileupload');
 
 // Setting the default infrastructure location
 if (!process.env.GOV_INFRASTRUCTURE) {
@@ -60,6 +61,9 @@ function start (port, host, argv) {
     }
 
     await governify.init().then(govMiddleware => {
+      application.use(express.json());
+      application.use(express.text());
+      application.use(fileUpload());
       application.use(govMiddleware);
       application.use(assetsManager.serveMiddleware);
     }).catch(err => {
