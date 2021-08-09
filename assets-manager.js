@@ -137,7 +137,7 @@ function serveMiddleware (req, res, next) {
             var file = Object.values(req.files)[0];
             if (fs.existsSync(filePath + '/' + file.name)) {
               response = 'File already exists.';
-              res.end(response);
+              res.status(409).send(response);
               return;
             }
 
@@ -178,6 +178,15 @@ function serveMiddleware (req, res, next) {
               res.end(response);
             });
           }
+        } else if (req.method === 'DELETE') {
+          if (!fs.existsSync(filePath)) {
+            response = 'File doesnt exist';
+            res.end(response);
+            return;
+          }
+          fs.unlinkSync(filePath);
+          response = 'File deleted';
+          res.status(200).send(response);
         }
       }
     }

@@ -102,6 +102,20 @@
             "operation":"append",
             "content":"testAppended"
         }
+    },
+    {
+        "name": "Json Get",
+        "type":"DELETE",
+        "docName":"test.json",
+        "body": {
+            "testData":"test"
+        }
+    },
+    {
+        "name": "Txt Get",
+        "type":"DELETE",
+        "docName":"test.txt",
+        "body": "test"
     }
     
 ]

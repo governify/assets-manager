@@ -21,7 +21,7 @@ describe('Tests', function () {
     describe('#apiPublicGetRequest()', function () {
         apiPublicGetRequest();
       });
-      describe('#apiPublicGetInfoRequest()', function () {
+    describe('#apiPublicGetInfoRequest()', function () {
         apiPublicGetInfoRequest();
       });
     describe('#apiPublicPutRequest()', function () {
@@ -29,6 +29,9 @@ describe('Tests', function () {
       });
     describe('#apiPublicPatchRequest()', function () {
         apiPublicPatchRequest();
+      });
+    describe('#apiPublicDeleteRequest()', function () {
+        apiPublicDeleteRequest();
       });
     describe('#apiPublicAuthorizationRequest()', function () {
         apiPublicAuthorizationRequest();
@@ -325,6 +328,38 @@ function apiPublicPatchRequest() {
                 } catch (err) {
                     assert.fail('Error when sending request');
                 }  
+            });
+        }
+    }
+}
+
+function apiPublicDeleteRequest() {
+    const testRequests = JSON.parse(fs.readFileSync(path.join(__dirname, '/testRequests.json')));
+    for (const testRequest of testRequests) {
+        if (testRequest.type === "DELETE") {
+
+            it('should respond with 200 OK on Delete (' + testRequest.name + ')', function (done) {
+
+                fs.writeFileSync(filesPathPrefix + '/public/'+ testRequest.docName, JSON.stringify(testRequest.body), 'UTF8')
+
+                try {
+                    const options = {
+                    method: 'DELETE',
+                    url: serverUrl + '/api/v1/public/'+ testRequest.docName,
+                    headers: {
+                        'User-Agent': 'request'
+                    }
+                    };
+                    governify.httpClient.request(options).then(response => {
+                        //Check operation successful
+                        assert.strictEqual(response.status, 200);
+                        done();
+                    }).catch(err => {
+                    assert.fail('Error on request');
+                    });
+                } catch (err) {
+                    assert.fail('Error when sending request');
+                }
             });
         }
     }
