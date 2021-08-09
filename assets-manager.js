@@ -185,8 +185,8 @@ function serveMiddleware (req, res, next) {
             return;
           }
           fs.unlinkSync(filePath);
-          response = 'File deleted'
-          res.status(200).send(response)
+          response = 'File deleted';
+          res.status(200).send(response);
         }
       }
     }
