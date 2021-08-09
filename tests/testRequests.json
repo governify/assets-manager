@@ -46,6 +46,12 @@
         "response": "test"
     },
     {
+        "name": "Public Info",
+        "type":"GETINFO",
+        "docName":"",
+        "length":1
+    },
+    {
         "name": "Authorization",
         "type":"Authorization",
         "authorization": "Basic Z292ZXJuaWZ5LWFkbWluOmdvdmVybmlmeS1wcm9qZWN0",
