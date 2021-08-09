@@ -1,3 +1,7 @@
+## [1.3.1](https://github.com/governify/assets-manager/compare/v1.3.0...v1.3.1) (2021-07-08)
+
+
+
 # [1.3.0](https://github.com/governify/assets-manager/compare/v1.2.2...v1.3.0) (2021-05-19)
 
 
