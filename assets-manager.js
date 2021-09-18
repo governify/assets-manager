@@ -52,7 +52,7 @@ function serveMiddleware (req, res, next) {
       if (req.query.private_key !== config.private_key) {
         res.status(500).send('Invalid private key.');
       }
-    } 
+    }
     if (req.path.toLowerCase().startsWith('/api/v1/info/')) {
       reqPath = reqPath.replace('/info', '');
 
