@@ -48,7 +48,7 @@ function start (port, host, argv) {
     application.use(cors());
     if (process.env.ASSETS_REPOSITORY) { // Download assets from repository if specified in ENV VAR
       // Fix for cleaning .keep file and let git download repository
-      if (fs.readdirSync('/home/project/public').length <= 1) {
+      if (fs.existsSync('/home/project/public') && fs.readdirSync('/home/project/public').length <= 1) {
         fs.rmdirSync('/home/project/public', { recursive: true });
         fs.rmdirSync('/home/project/private', { recursive: true });
       }
