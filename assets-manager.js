@@ -52,7 +52,8 @@ function serveMiddleware (req, res, next) {
       if (req.query.private_key !== config.private_key) {
         res.status(500).send('Invalid private key.');
       }
-    } else if (req.path.toLowerCase().startsWith('/api/v1/info/')) {
+    } 
+    if (req.path.toLowerCase().startsWith('/api/v1/info/')) {
       reqPath = reqPath.replace('/info', '');
 
       tmpPath = process.env.NODE_ENV === 'production' ? '/home/project' : path.join(__dirname, 'files');
