@@ -19,6 +19,7 @@ function gitDownload (url, path, branch) {
     });
     process.on('close', function (status) {
       if (status === 0) {
+        fs.rmdirSync(`${path}/.git`, { recursive: true });
         resolve('Cloned succesfully');
       } else {
         resolve('git clone failed with status ' + status);
