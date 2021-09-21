@@ -16,7 +16,7 @@ COPY assets-manager.js /home/theia/src-gen/backend/assets-manager.js
 COPY server.js /home/theia/src-gen/backend/server.js
 COPY configurations /home/theia/src-gen/backend/configurations
 COPY git-downloader.js /home/theia/src-gen/backend/git-downloader.js
-COPY files* /home/project
+# COPY files* /home/project
 RUN mkdir /home/theia/.theia
 COPY extensions* /home/theia/.theia/extensions
 
