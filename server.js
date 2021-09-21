@@ -7,7 +7,6 @@ if (typeof process.versions.electron === 'undefined' && typeof process.env.THEIA
 }
 
 const path = require('path');
-const fs = require('fs');
 const express = require('express');
 const cors = require('cors');
 const { Container } = require('inversify');
