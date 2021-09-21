@@ -23,7 +23,7 @@ function gitDownload (url, path, branch) {
     }
 
     if (!empty) {
-      logger.info("GIT-CLONE-CONSOLE: Directory not empty, attempting to merge with current files");
+      logger.info('GIT-CLONE-CONSOLE: Directory not empty, attempting to merge with current files');
 
       fs.renameSync(`${path}/tmp/.git`, `${path}/.git`); // Moves .git folder
       fs.rmdirSync(`${path}/tmp`, { recursive: true });
