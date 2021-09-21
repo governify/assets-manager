@@ -20,6 +20,8 @@ const gitDownloader = require('./git-downloader');
 const governify = require('governify-commons');
 const logger = governify.getLogger().tag('server');
 const fileUpload = require('express-fileupload');
+const fs = require('fs');
+const spawnSync = require('child_process').spawnSync;
 
 // Setting the default infrastructure location
 if (!process.env.GOV_INFRASTRUCTURE) {
@@ -45,13 +47,15 @@ function start (port, host, argv) {
   return cliManager.initializeCli(argv).then(async function () {
     const application = container.get(BackendApplication);
     application.use(cors());
-    if (process.env.ASSETS_REPOSITORY) { // Download assets from repository if specified in ENV VAR
+    if (process.env.ASSETS_REPOSITORY && !fs.existsSync('/home/project/.git')) { // Download assets from repository if specified in ENV VAR
       logger.info('Assets repository URL specified. Downloading assets from: ', process.env.ASSETS_REPOSITORY);
       if (process.env.ASSETS_REPOSITORY_BRANCH) {
         logger.info('And checking out branch:', process.env.ASSETS_REPOSITORY_BRANCH);
       }
       await gitDownloader.gitDownload(process.env.ASSETS_REPOSITORY, '/home/project', process.env.ASSETS_REPOSITORY_BRANCH, process.env.ASSETS_REPOSITORY_SSHKEY);
       logger.info('Git download process finished');
+    } else if (process.env.ASSETS_REPOSITORY && !fs.existsSync(process.env.GOV_INFRASTRUCTURE)) {
+      spawnSync('git', ['reset', '--hard', 'HEAD'], { cwd: '/home/project/' });
     }
 
     await governify.init().then(govMiddleware => {
