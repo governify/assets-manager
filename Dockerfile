@@ -22,9 +22,15 @@ COPY extensions* /home/theia/.theia/extensions
 
 #Override for incrementing body size limit on requests
 COPY fileOverrides/file-download-endpoint.ts /home/theia/node_modules/@theia/filesystem/lib/node/download/file-download-endpoint.js
+
+# DB Backups volume permissions
+RUN mkdir -p /home/project/public/database/backups;
+
+# Permissions
 RUN chown -R theia:theia /home/project;
 RUN chown -R theia:theia /home/theia/.theia
 RUN chown -R theia:theia /home/theia/.config
+
 USER theia
 EXPOSE 80
 
