@@ -1,5 +1,6 @@
 
 var spawn = require('child_process').spawn;
+const fs = require('fs');
 const logger = require('governify-commons').getLogger().tag('git-downloader');
 
 function gitDownload (url, path, branch) {
