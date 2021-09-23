@@ -134,6 +134,16 @@ function serveMiddleware (req, res, next) {
         res.send(response);
       } else {
         if (req.method === 'POST') {
+          const filePathWithoutName = req.files ? filePath : filePath.split('\\').slice(0, -1).join('/');
+
+          if (!fs.existsSync(filePathWithoutName) && !req.query.createDirectories) {
+            response = 'Directory doesnt exist';
+            res.status(404).send(response);
+            return;
+          }
+
+          req.query.createDirectories && fs.mkdirSync(filePathWithoutName, { recursive: true });
+
           if (req.files) {
             var file = Object.values(req.files)[0];
             if (fs.existsSync(filePath + '/' + file.name)) {
@@ -154,7 +164,16 @@ function serveMiddleware (req, res, next) {
             res.status(409).send(response);
             return;
           }
-          fs.writeFile(filePath, JSON.stringify(req.body), 'UTF8', function (response) {
+
+          var data;
+          if (req.rawHeaders.includes('application/json')) {
+            data = JSON.stringify(req.body);
+          } else if (req.body instanceof Object) {
+            data = '';
+          } else {
+            data = req.body;
+          }
+          fs.writeFile(filePath, data, 'UTF8', function (response) {
             res.end(response);
           }
           );
