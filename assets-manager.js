@@ -164,7 +164,7 @@ function serveMiddleware (req, res, next) {
             res.status(409).send(response);
             return;
           }
-
+          
           var data;
           if (req.rawHeaders.includes('application/json')) {
             data = JSON.stringify(req.body);
