@@ -134,7 +134,7 @@ function serveMiddleware (req, res, next) {
         res.send(response);
       } else {
         if (req.method === 'POST') {
-          const filePathWithoutName = req.files ? filePath : filePath.replace(/\\/g,'/').split('/').slice(0, -1).join('/');
+          const filePathWithoutName = req.files ? filePath : filePath.replace(/\\/g, '/').split('/').slice(0, -1).join('/');
 
           if (!fs.existsSync(filePathWithoutName) && !req.query.createDirectories) {
             response = 'Directory doesnt exist';
