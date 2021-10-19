@@ -60,8 +60,8 @@ function serveMiddleware (req, res, next) {
       filePath = path.join(tmpPath, reqPath);
 
       if (req.method === 'GET') {
-        if(!fs.existsSync(filePath)){
-          res.status(404).send("Path not found");
+        if (!fs.existsSync(filePath)) {
+          res.status(404).send('Path not found');
           return;
         }
         var fileStats = fs.lstatSync(filePath);
