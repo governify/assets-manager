@@ -1,7 +1,7 @@
 {
   "name": "assets-manager",
   "main": "index.js",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "Assets Manager for Governify Project",
   "author": {
     "name": "ISA group",

@@ -1,3 +1,12 @@
+## [1.4.1](https://github.com/governify/assets-manager/compare/v1.4.0...v1.4.1) (2021-10-28)
+
+
+### Bug Fixes
+
+* Modified docker file to use new base image ([7f2a781](https://github.com/governify/assets-manager/commit/7f2a781988b17e8bd01c51193dd449d29654be15))
+
+
+
 # [1.4.0](https://github.com/governify/assets-manager/compare/v1.3.1...v1.4.0) (2021-10-28)
 
 
