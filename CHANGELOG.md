@@ -1,3 +1,48 @@
+# [1.4.0](https://github.com/governify/assets-manager/compare/v1.3.1...v1.4.0) (2021-10-28)
+
+
+### Bug Fixes
+
+* Check if .git folder exists ([ca1ff97](https://github.com/governify/assets-manager/commit/ca1ff97cd8d21dc93d3abb6e4aa9ca3e9034b338))
+* check if folder exist before git clone ([d4c43f9](https://github.com/governify/assets-manager/commit/d4c43f936b095200c1238eb56c5c12a395df0323))
+* coverage ([e1cfdd5](https://github.com/governify/assets-manager/commit/e1cfdd576a20d80a6158816a97557c1e51110cb4))
+* coverage ([0747606](https://github.com/governify/assets-manager/commit/0747606cb7956ba03c49f8aebefc495ad9de68cd))
+* Coveralls under maintenance ([9980f7b](https://github.com/governify/assets-manager/commit/9980f7ba2429fe615aaaf41a4d083d9bece541ea))
+* git downloader merging local files ([a444677](https://github.com/governify/assets-manager/commit/a4446777be2c613526f301b2ed9c1a1b2734f028))
+* info path not found ([c492d2e](https://github.com/governify/assets-manager/commit/c492d2ee8f182260ece74ce986ea2ca27417ce19))
+* lint ([f9b0d25](https://github.com/governify/assets-manager/commit/f9b0d256ab7acedc9a59b19ff11962d6c8c18da5))
+* lint ([7dbd836](https://github.com/governify/assets-manager/commit/7dbd836ea77627f60519b641ccefa955ca43bd8e))
+* lint fix ([698fa87](https://github.com/governify/assets-manager/commit/698fa87af75551cc265e79a77800a0318ec3d58f))
+* lint fix ([fd1626d](https://github.com/governify/assets-manager/commit/fd1626d17a53b8069856b4cf549a73f0a45c99d2))
+* lint fix ([6d28cbc](https://github.com/governify/assets-manager/commit/6d28cbcbb2dbed8c293bb8c0bb392ddf10b84069))
+* lint fix singlequotes ([0869132](https://github.com/governify/assets-manager/commit/08691328d1655e3f6b3f515ab8b68a3303b0a86f))
+* missing dependency ([a6b5599](https://github.com/governify/assets-manager/commit/a6b5599bd1d1b7ec8149aefabc8c63d1c7bbb96a))
+* path divider local in post ([885fbe0](https://github.com/governify/assets-manager/commit/885fbe0889cf4381834cdcbdccecf5e68e087d4c))
+* private endpoints ([55bc75d](https://github.com/governify/assets-manager/commit/55bc75d769cfd4d5de37264f650279e06e84192a))
+* Remove .keep folder if importing from git ([cf08175](https://github.com/governify/assets-manager/commit/cf08175465a7feb68c1e002d9278e01076a6204e))
+* remove logs ([7216ac7](https://github.com/governify/assets-manager/commit/7216ac732091ec41026ca340e6a4fc730b312188))
+* Removed unused dependency ([c059994](https://github.com/governify/assets-manager/commit/c059994f81b29469e61a2e8aaa20425eab9b52a3))
+* removing git folder after cloning ([10b7ce5](https://github.com/governify/assets-manager/commit/10b7ce50acbc9e848b1c650ba39fc1a6fafc1ef7))
+* rm collectors from external infrastructure ([63415c8](https://github.com/governify/assets-manager/commit/63415c8df84c0f14d7fad87263132239002c9226))
+* update commons version ([63fea31](https://github.com/governify/assets-manager/commit/63fea311d31f98100e1b04679648e065671a730d))
+
+
+### Features
+
+* commons logs ([e3a2e3e](https://github.com/governify/assets-manager/commit/e3a2e3e1848606d366a7842b0728235f0aae366c))
+* delete endpoint ([9f119f2](https://github.com/governify/assets-manager/commit/9f119f25a10ecd7b8daed1bee1cd1a7ad847409b))
+* delete endpoint unit test ([aecd1b0](https://github.com/governify/assets-manager/commit/aecd1b060c48bd25604db462c6d3a6fe34788f80))
+* Folder info and Zip download ([923b20f](https://github.com/governify/assets-manager/commit/923b20f31c13e68f08ced86a05414c1261987d9e))
+* gitignore for files ([eec3462](https://github.com/governify/assets-manager/commit/eec34629e6af0ba0d9c27644c13913e4dc21f859))
+* Implemented Code errors post/put/patch ([4ebc548](https://github.com/governify/assets-manager/commit/4ebc548345aaba8a74932c96b5c9ce46f34d3b72))
+* Info endpoint tests ([cfbc110](https://github.com/governify/assets-manager/commit/cfbc11031350c2fc199b9959432820db81cb54df))
+* npm update governify-commons ([9d0b45f](https://github.com/governify/assets-manager/commit/9d0b45f652dccf1c99c3dbf65e2a155e4a86f6a9))
+* prepared for testing ([32ef678](https://github.com/governify/assets-manager/commit/32ef6787e3497f4a310e43ab0dd37c1b6255a240))
+* update commons v1.14 ([86c765c](https://github.com/governify/assets-manager/commit/86c765c62bb400ba43254f24fb0487051261245e))
+* Volume for DB backups ([4ddc7e3](https://github.com/governify/assets-manager/commit/4ddc7e3bd3024529bf6f5426bd34290c176d8529))
+
+
+
 ## [1.3.1](https://github.com/governify/assets-manager/compare/v1.3.0...v1.3.1) (2021-07-08)
 
 
