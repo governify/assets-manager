@@ -5,9 +5,9 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [main, develop]
   pull_request:
-    branches: [ main, develop ]
+    branches: [main, develop]
 
 jobs:
   test:
@@ -17,32 +17,31 @@ jobs:
       matrix:
         node-version: [14.x]
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - name: Install dependencies 
-      run: npm ci
-# TODO
-#    - name: Check syntax
-#      run: npm run lint
-#      env:
-#        CI: true
-#    - name: Run tests
-#      run: npm run test
-#      env:
-#        CI: true
-#    - name: Generate coverage report
-#      run: npm run coverage
-#      env:
-#        CI: true    
-#    - name: Coverage to Coveralls
-#      uses: coverallsapp/github-action@master
-#      with:
-#        github-token: ${{ secrets.GITHUB_TOKEN }}
-#      env:
-#        CI: true
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install dependencies
+        run: npm ci
+      - name: Check syntax
+        run: npm run lint
+        env:
+          CI: true
+      - name: Run tests
+        run: npm run test
+        env:
+          CI: true
+      - name: Generate coverage report
+        run: npm run coverage
+        env:
+          CI: true
+#      - name: Coverage to Coveralls
+#        uses: coverallsapp/github-action@master
+#        with:
+#          github-token: ${{ secrets.GITHUB_TOKEN }}
+#        env:
+#          CI: true
   e2eTest:
     name: (develop) E2E - Checkout infrastructure, install mocha and run tests (docker-compose up, mocha tests and docker-compose down)
     needs: buildTest
@@ -51,22 +50,22 @@ jobs:
       matrix:
         node-version: [14.x]
     steps:
-    - uses: actions/checkout@v2
-      with:
-        repository: governify/bluejay-infrastructure
-        ref: refs/heads/develop
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - name: Install dependencies 
-      run: npm ci
-    - name: Add host.docker.internal association to 172.17.0.1
-      run: sudo echo "172.17.0.1 host.docker.internal" | sudo tee -a /etc/hosts
-    - name: Run tests
-      run: npm run test
-      env:
-        CI: true
+      - uses: actions/checkout@v2
+        with:
+          repository: governify/bluejay-infrastructure
+          ref: refs/heads/develop
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install dependencies
+        run: npm ci
+      - name: Add host.docker.internal association to 172.17.0.1
+        run: sudo echo "172.17.0.1 host.docker.internal" | sudo tee -a /etc/hosts
+      - name: Run tests
+        run: npm run test
+        env:
+          CI: true
   e2eMain:
     name: (main) E2E - Checkout infrastructure, install mocha and run tests (docker-compose up, mocha tests and docker-compose down)
     if: ${{ github.ref == 'refs/heads/main' }}
@@ -76,22 +75,22 @@ jobs:
       matrix:
         node-version: [14.x]
     steps:
-    - uses: actions/checkout@v2
-      with:
-        repository: governify/bluejay-infrastructure
-        ref: refs/heads/develop
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - name: Install dependencies 
-      run: npm ci
-    - name: Add host.docker.internal association to 172.17.0.1
-      run: sudo echo "172.17.0.1 host.docker.internal" | sudo tee -a /etc/hosts
-    - name: Run tests
-      run: npm run test
-      env:
-        CI: true
+      - uses: actions/checkout@v2
+        with:
+          repository: governify/bluejay-infrastructure
+          ref: refs/heads/develop
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install dependencies
+        run: npm ci
+      - name: Add host.docker.internal association to 172.17.0.1
+        run: sudo echo "172.17.0.1 host.docker.internal" | sudo tee -a /etc/hosts
+      - name: Run tests
+        run: npm run test
+        env:
+          CI: true
   buildTest:
     name: Build and push to dockerhub using develop tag
     if: ${{ github.ref == 'refs/heads/develop' && github.event_name == 'push' }}
@@ -103,7 +102,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
       - name: Login to DockerHub
-        uses: docker/login-action@v1 
+        uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -121,16 +120,16 @@ jobs:
     needs: e2eMain
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2    
+      - uses: actions/checkout@v2
       - name: Conventional Changelog
         id: changelog
         uses: TriPSs/conventional-changelog-action@v2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          output-file: 'CHANGELOG.md'
-          tag-prefix: 'v'
+          output-file: "CHANGELOG.md"
+          tag-prefix: "v"
           release-count: 0
-          package-json: './package.json'
+          package-json: "./package.json"
       - name: Create Release
         uses: actions/create-release@v1
         env:
@@ -148,7 +147,7 @@ jobs:
           pr_body: ":crown:"
           pr_reviewer: "pafmon"
           pr_assignee: "cesgarpas"
-          pr_label: "auto-pr"                              
+          pr_label: "auto-pr"
           github_token: ${{ secrets.GITHUB_TOKEN }}
       - uses: AutoModality/action-clean@v1
       - name: Set up QEMU
@@ -156,7 +155,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
       - name: Login to DockerHub
-        uses: docker/login-action@v1 
+        uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}

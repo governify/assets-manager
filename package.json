@@ -9,8 +9,13 @@
   },
   "license": "ISC",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "precommit": "semistandard --fix && nyc mocha ./tests/test.js --timeout 20000 -s 5",
+    "test": "mocha ./tests/test.js --timeout 20000 -s 20",
+    "coverage": "nyc --reporter=lcov mocha ./tests/test.js --timeout 20000 -s 20",
+    "cov": "nyc mocha ./tests/test.js --timeout 20000 -s 5",
+    "start": "node server.js",
+    "lint": "semistandard",
+    "lint-fix": "semistandard --fix"
   },
   "repository": {
     "type": "git",
@@ -24,8 +29,21 @@
     "basic-auth": "^2.0.1",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
-    "governify-commons": "1.x",
+    "express": "^4.17.1",
+    "express-fileupload": "^1.2.1",
+    "governify-commons": "^1.17.0",
     "js-yaml": "^4.0.0",
     "mustache": "^4.2.0"
+  },
+  "devDependencies": {
+    "mocha": "^9.0.1",
+    "nyc": "^15.1.0",
+    "semistandard": "^14.2.0",
+    "sinon": "^11.1.1"
+  },
+  "semistandard": {
+    "ignore": [
+      "/tests/**"
+    ]
   }
 }
