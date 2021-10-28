@@ -1,9 +1,5 @@
-FROM theiaide/theia:1.10.0
+FROM governify/base-assets-manager:stable
 USER root
-
-#Fix for deploy on port 80
-RUN apk add libcap
-RUN setcap 'cap_net_bind_service=+ep' /usr/local/bin/node
 
 #Add assets manager dependencies (in another folder to avoid overwriting package.json)
 WORKDIR /home
@@ -16,20 +12,18 @@ COPY assets-manager.js /home/theia/src-gen/backend/assets-manager.js
 COPY server.js /home/theia/src-gen/backend/server.js
 COPY configurations /home/theia/src-gen/backend/configurations
 COPY git-downloader.js /home/theia/src-gen/backend/git-downloader.js
+
 # COPY files* /home/project
-RUN mkdir /home/theia/.theia
 COPY extensions* /home/theia/.theia/extensions
 
-#Override for incrementing body size limit on requests
-COPY fileOverrides/file-download-endpoint.ts /home/theia/node_modules/@theia/filesystem/lib/node/download/file-download-endpoint.js
+#Override for incrementing body size limit on requests (Done in base image)
+# COPY fileOverrides/file-download-endpoint.ts /home/theia/node_modules/@theia/filesystem/lib/node/download/file-download-endpoint.js
 
 # DB Backups volume permissions
 RUN mkdir -p /home/project/public/database/backups;
 
 # Permissions
-RUN chown -R theia:theia /home/project;
-RUN chown -R theia:theia /home/theia/.theia
-RUN chown -R theia:theia /home/theia/.config
+RUN chown -R theia:theia /home/project
 
 USER theia
 EXPOSE 80
