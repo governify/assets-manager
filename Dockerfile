@@ -22,6 +22,9 @@ COPY extensions* /home/theia/.theia/extensions
 # DB Backups volume permissions
 RUN mkdir -p /home/project/public/database/backups;
 
+# Logs volume permissions
+RUN mkdir -p /home/project/public/logs;
+
 # Permissions
 RUN chown -R theia:theia /home/project
 
