@@ -1,3 +1,17 @@
+# [1.5.0](https://github.com/governify/assets-manager/compare/v1.4.1...v1.5.0) (2023-02-12)
+
+
+### Bug Fixes
+
+* logs volume permission denied ([5d0d29d](https://github.com/governify/assets-manager/commit/5d0d29da49667212f5d7479519eb28d40a4cec5c))
+
+
+### Features
+
+* install newrelic ([6804e41](https://github.com/governify/assets-manager/commit/6804e41b6e3256817c0b12c948155eba27c74c12))
+
+
+
 ## [1.4.1](https://github.com/governify/assets-manager/compare/v1.4.0...v1.4.1) (2021-10-28)
 
 
